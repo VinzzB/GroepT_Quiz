@@ -1,0 +1,5 @@
+1	 VRAAG	 Wat is de hoofdstad van Spanje?	 Madrid	 1	 0	 Alg_Ken	 01/11/2011	 FoxP
+2	 VRAAG	 Wat is de hoofdstad van Frankrijk?	 Parijs	 1	 0	 Alg_Ken	 01/11/2011	 FoxP
+3	 MEERKEUZE	 Wat is de hoofdstad van België?	 1	 1	 0	 Alg_Ken	 08/11/2014	 FoxP	 Brussel;Antwerpen;Leuven
+4	 OPSOMMING	 Som de hoofdsteden van onze aangrenzende buurlanden op.	 Parijs;Amsterdam;Berlijn	 1	 0	 Alg_Ken	 08/11/2014	 FoxP	 false
+5	 OPSOMMING	 Som onze aangrenzende buurlanden chronologisch op.	 Duitsland;Frankrijk;Luxemburg;Nederland	 1	 0	 Alg_Ken	 08/11/2014	 FoxP	 true
