@@ -6,8 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JTable;
-
-import model.Catalogi;
+import model.quiz.catalogi.Catalogi;
 import utils.OpdrachtenTableModel;
 import view.BeheerOpdrachten;
 import view.Main;
@@ -15,13 +14,11 @@ import view.Main;
 public class BeheerOpdrachtenController {
 
 	private Main mainForm;
-	private Catalogi cat;
 	private BeheerOpdrachten panel;
-	public BeheerOpdrachtenController(Main mainForm, Catalogi cat) {
+	public BeheerOpdrachtenController(Main mainForm, BeheerOpdrachten panel) {
 		this.mainForm = mainForm;
-		this.cat = cat;		
-		panel = new BeheerOpdrachten();
-		panel.fillOpdrachtenTable(new OpdrachtenTableModel(cat.getOpdrachtCatalogus().getOpdrachten()));
+		this.panel = panel;		
+		panel.fillOpdrachtenTable(new OpdrachtenTableModel(Catalogi.getInstance().getOpdrachtCatalogus().getOpdrachten()));
 		panel.addButtonListener(new ButtonListener());
 		panel.addTableMouseListener(new TableMouseListener());
 		mainForm.addPanel(panel, "beheerOpdrachten");
@@ -30,8 +27,7 @@ public class BeheerOpdrachtenController {
 	public void closePanel()
 	{
 		mainForm.removePanel(panel);
-		mainForm = null;
-		cat = null;
+		mainForm = null;		
 		panel = null;
 	}
 	
@@ -39,10 +35,8 @@ public class BeheerOpdrachtenController {
 	{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
 			closePanel();
 		}
-		
 	}	
 	
 	private class TableMouseListener extends MouseAdapter
@@ -53,7 +47,7 @@ public class BeheerOpdrachtenController {
 			{
 				JTable table = (JTable)arg0.getSource();
 				int rowIdx = table.rowAtPoint(arg0.getPoint());
-				BeheerOpdrachtController b = new BeheerOpdrachtController(mainForm, cat.getOpdracht((int)table.getValueAt(rowIdx, 0)));
+				BeheerOpdrachtController b = new BeheerOpdrachtController(mainForm, Catalogi.getInstance().getOpdracht((int)table.getValueAt(rowIdx, 0)));
 				b.showPanel();
 			}
 		}

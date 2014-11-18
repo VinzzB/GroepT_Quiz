@@ -2,26 +2,21 @@ package persistance;
 
 public class DbHandler {
 	
-//	private static volatile DbHandler instance;
-//	
-//	public synchronized static DbHandler getInstance()
-//	{
-//		if (instance == null)
-//			synchronized (DbHandler.class) {
-//				if (instance == null)
-//					instance = new DbHandler();
-//			}
-//		
-//		return instance;
-//	}
-//	
-//	private DbHandler()
-//	{
-//		
-//	}
+	private static volatile IDbStrategy instance;
 	
+	public synchronized static IDbStrategy getInstance()
+	{
+		if (instance == null)
+			synchronized (DbHandler.class) {
+				if (instance == null)
+					instance = new DbHandler().getCatalogus(Properties.getInstance().getDbStore());
+			}		
+		return instance;
+	}
 	
-	public IDbStrategy getCatalogus(DbStoreType storeType)
+	private DbHandler()  { /* SINGLETON*/ }	
+	
+	public IDbStrategy getCatalogus(DbStoreType storeType) //--> Public method only usable in this class. 
 	{
 		switch (storeType) {
 		case TextFile:

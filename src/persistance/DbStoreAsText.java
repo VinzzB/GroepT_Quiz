@@ -7,56 +7,55 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import utils.date.normal.Datum;
 import model.quiz.*;
-import model.quiz.opdrachten.OpdrachtCatalogus;
+import model.quiz.catalogi.OpdrachtCatalogus;
 import model.quiz.opdrachten.OpdrachtFactory;
 import model.quiz.status.Status;
 import model.quiz.status.Statussen;
 
-public class DbStoreAsText extends DbTextBase implements IDbStrategy {
+public class DbStoreAsText extends DbTextBase {
 
 	private final String quizenPath = "./bin/persistance/data/quizen.dat";
 	private final String opdrachtenPath = "./bin/persistance/data/opdrachten.dat";
 	private final String quizOpdrachtenPath = "./bin/persistance/data/quizOpdrachten.dat";
 	@Override
 	public Map<Integer,Opdracht> leesOpdrachten() {
-		// TODO Auto-generated method stub
+		// Read rows and parse into fields (as array)
 		List<String[]> rows = readFile(opdrachtenPath);
-		//Map the data with an index number
+		// Map the data with an index number
 		Map<Integer,Opdracht> opdrachten = new HashMap<Integer, Opdracht>();		
-		for (String[] row : rows) {
-			//Factory!			
-			opdrachten.put(Integer.parseInt(row[0]), OpdrachtFactory.getOpdracht(row[1], row));
+		for (String[] row : rows) {		
+			//Factory for DbData Object			
+			DbOpdrachtBase Dbo = DbOpdrachtFactory.getDbOpdracht(row[1], row);
+			//Factory for Opdracht object
+			opdrachten.put(Integer.parseInt(row[0]), OpdrachtFactory.getOpdracht(Dbo));
 		}
 		return opdrachten;
 	}
 
 	@Override
 	public Map<Integer,Quiz> leesQuizen(OpdrachtCatalogus opdrachtenCatalog) {
-		// TODO Auto-generated method stub
+		// Read rows and parse into fields (as array)
 		List<String[]> rows = readFile(quizenPath);
-		List<dbQuizOpdracht> quizOpdrachten = leesQuizOpdrachten();
-		
+		//Get all Quiz Opdrachten at once
+		List<DbQuizOpdracht> quizOpdrachten = leesQuizOpdrachten();
+		//Create a new quizen list
 		Map<Integer, Quiz> quizen = new HashMap<Integer, Quiz>();
 		for (String[] row : rows) {
-			//rebuild Quiz (Status = inConstructie)
+			//Parse data
 			int id = Integer.parseInt(row[0]);
-			Quiz q = new Quiz(row[1]);			
-			q.setLeerjaren(row[2]);
-			q.setIsTest(Boolean.parseBoolean(row[3]));
-			q.setIsUniekeDeelname(Boolean.parseBoolean(row[4]));
-			q.setDatumRegistratie(new Datum(row[6]));
-			q.setAuteur(Leraar.valueOf(row[7]));
+			DbQuiz dataRow = new DbQuiz(row);
+			//rebuild Quiz (Status = inConstructie)
+			Quiz q = new Quiz(dataRow);
 			
 			//Koppel opdrachten van huidige quiz (filters quizOpdrachten list)
-			List<dbQuizOpdracht> currQuizOpdrachten = quizOpdrachten.stream().filter(p -> p.getQuizIndex() == id).collect(Collectors.toList());
-			for (dbQuizOpdracht dbQo : currQuizOpdrachten) {
+			List<DbQuizOpdracht> currQuizOpdrachten = quizOpdrachten.stream().filter(p -> p.getQuizIndex() == id).collect(Collectors.toList());
+			for (DbQuizOpdracht dbQo : currQuizOpdrachten) {
 				Opdracht o = opdrachtenCatalog.getOpdracht(dbQo.getOpdrachtIndex());
 				if (o != null)
 				{ QuizOpdracht.koppelOpdrachtAanQuiz(q, o, dbQo.getMaxScore()); }
 			}
-			//zet saved status
+			//set saved status
 			q.setStatus(Status.get(Statussen.valueOf(row[5])));
 			//add to quizen catalog
 			quizen.put(id, q); //new Quiz(row));			
@@ -64,13 +63,11 @@ public class DbStoreAsText extends DbTextBase implements IDbStrategy {
 		return quizen;
 	}
 
-	private List<dbQuizOpdracht> leesQuizOpdrachten() {
+	private List<DbQuizOpdracht> leesQuizOpdrachten() {
 		List<String[]> rows = readFile(quizOpdrachtenPath);
-		List<dbQuizOpdracht> values = new ArrayList<dbQuizOpdracht>();
+		List<DbQuizOpdracht> values = new ArrayList<DbQuizOpdracht>();
 		for (String[] row : rows) {
-			values.add(new dbQuizOpdracht(Integer.parseInt(row[0]), 
-										  Integer.parseInt(row[1]), 
-										  Integer.parseInt(row[2])));
+			values.add(new DbQuizOpdracht(row));
 		}
 		return values;
 	}
@@ -81,11 +78,12 @@ public class DbStoreAsText extends DbTextBase implements IDbStrategy {
 		//Schrijf opdrachten naar bestand
 		List<String[]> opdrData = new ArrayList<String[]>();
 		for (Entry<Integer, Opdracht> i : opdrachten.entrySet()) {
-			String[] dbRow = i.getValue().getDataForDb();
-			dbRow[0] = Integer.toString(i.getKey());
+			//Fill DbData Object
+			DbOpdrachtBase dbDataBase = DbOpdrachtFactory.getDbOpdracht(i.getValue());
+			String[] dbRow = dbDataBase.asStringArray(); //fill data array
+			dbRow[0] = Integer.toString(i.getKey()); //add key
 			opdrData.add(dbRow);			
-		}
-		
+		}		
 		writeFile(opdrachtenPath, opdrData);
 	}
 
@@ -98,10 +96,11 @@ public class DbStoreAsText extends DbTextBase implements IDbStrategy {
 		//iterate through quizen
 		for (Entry<Integer, Quiz> i : quizen.entrySet()) {
 			//get quiz data
-			String[] dbRow = i.getValue().getDataForDb();
-			dbRow[0] = Integer.toString(i.getKey());
+			DbQuiz dataRow = new DbQuiz(i.getValue(), i.getKey());
+			String[] dbRow = dataRow.asStringArray();
 			quizData.add(dbRow);			
 			//get gekoppelde opdrachten
+			//TODO opsplitsen in aparte method??? ( lees/schrijfGekoppeldeQuizOpdrachten() --> Hoe status?) 
 			for (QuizOpdracht qo : i.getValue().getQuizOpdrachten()) {
 				Opdracht o = qo.getOpdracht();
 				int idx = opdrachtenCatalog.getIndex(o);
@@ -110,10 +109,9 @@ public class DbStoreAsText extends DbTextBase implements IDbStrategy {
 										Integer.toString(qo.getMaxScore()) });
 			}			
 		}
-		
+		//Schrijf quizen naar bestand.
 		writeFile(quizenPath, quizData);
-		//Schrijf gekoppelde quizen naar bestand	
+		//Schrijf gekoppelde quiz opdrachten naar bestand	
 		writeFile(quizOpdrachtenPath, qoList);
 	}
-	
 }

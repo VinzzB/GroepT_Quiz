@@ -5,14 +5,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JMenuItem;
-
-import model.Catalogi;
+import model.quiz.catalogi.Catalogi;
+import view.BeheerOpdrachten;
 import view.Main;
+import view.StartPanel;
 
 public class MainController {
 
 	private Main mainForm;
-	private Catalogi cat;
 	/**
 	 * The app starts here!
 	 * @param args
@@ -25,10 +25,11 @@ public class MainController {
 	public MainController() {
 		mainForm = new Main();
 		mainForm.addWindowListener(new WindowListener());
-		cat = new Catalogi();
-		cat.loadData();
+	//	cat = new Catalogi();
+	//	cat.loadData();
 		mainForm.addMenuListener(new MenuClickHandler());
-		new StartController(mainForm, cat);
+		StartPanel panel = new StartPanel();
+		new StartController(mainForm, panel);
 		mainForm.showMe();
 	}	
 	
@@ -51,7 +52,8 @@ public class MainController {
 				}
 				else if(jItem.equals(mainForm.getMntmOpdrachten())) //beheer opdrachten
 				{
-					new BeheerOpdrachtenController(mainForm, cat);
+					
+					new BeheerOpdrachtenController(mainForm, new BeheerOpdrachten());
 				}
 				else if(jItem.equals(mainForm.getMntmQuizenTesten())) //Beheer quizen
 				{
@@ -64,9 +66,9 @@ public class MainController {
 	public void close()
 	{
 		//if 
+		Catalogi.getInstance().saveData();
 		mainForm.setVisible(false);		
 		mainForm = null;
-		cat = null;
 		System.exit(0);
 	}
 	

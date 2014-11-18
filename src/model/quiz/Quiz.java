@@ -7,6 +7,7 @@ import utils.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import persistance.DbQuiz;
 import model.quiz.status.*;
 import utils.date.normal.Datum;
 
@@ -40,44 +41,17 @@ public class Quiz implements Iterable<QuizOpdracht>, Comparable<Quiz>
 		setIsUniekeDeelname(isUniekeDeelname);		
 	}	
 
-	/** Create a Quiz with properties from Db.
-	 * 0: ID
-	 * 1: Onderwerp
-	 * 2: Leerjaren (comma seperated)
-	 * 3: isTest
-	 * 4: isUniekeDeelname
-	 * 5: Status
-	 * 6: DatumReg
-	 * 7: Auteur
-	 * @param fields
-	 */
-	public Quiz(String[] fields)
+	public Quiz(DbQuiz dbData)
 	{
-		this(fields[1]);		
-		//Parse leerjaren
-		String[] tmpL = fields[2].split(",");
-		this.leerjaren = new int[tmpL.length];
-		for (int i = 0; i < tmpL.length; i++) 
-		{ leerjaren[i] = Integer.parseInt(tmpL[i]); }
-		this.isTest = Boolean.parseBoolean(fields[3]);
-		this.isUniekeDeelname = Boolean.parseBoolean(fields[4]);
-		this.setStatus(Status.get(Statussen.valueOf(fields[5])));
-		this.datumRegistratie = new Datum(fields[6]);
-		this.auteur = Leraar.valueOf(fields[7]);		
+		this(dbData.getOnderwerp());
+		
+		this.leerjaren = dbData.getLeerjaren();
+		this.isTest = dbData.isTest();
+		this.isUniekeDeelname = dbData.isUniekeDeelname();
+		this.datumRegistratie = dbData.getDatumRegistratie();
+		this.auteur = dbData.getAuteur();		
 	}
 	
-	public String[] getDataForDb()
-	{
-		String[] values = new String[8]; //0 =empty!
-		values[1] = this.onderwerp;
-		values[2] = Arrays.Join(",", this.leerjaren);
-		values[3] = Boolean.toString(this.isTest);
-		values[4] = Boolean.toString(this.isUniekeDeelname);
-		values[5] = status.get().name();
-		values[6] = datumRegistratie.getEuropeanFormat();
-		values[7] = auteur.name();
-		return values;
-	}
 	
 	//Properties set
 	public void setOnderwerp(String onderwerp) { this.onderwerp = onderwerp; }
@@ -88,13 +62,7 @@ public class Quiz implements Iterable<QuizOpdracht>, Comparable<Quiz>
 	public void setIsUniekeDeelname(boolean isUniekeDeelname) 
 	{ this.isUniekeDeelname = isUniekeDeelname; }
 	
-	public void setLeerjaren(String leerjaren)
-	{
-		String[] tmpL = leerjaren.split(",");
-		this.leerjaren = new int[tmpL.length];
-		for (int i = 0; i < tmpL.length; i++) 
-		{ this.leerjaren[i] = Integer.parseInt(tmpL[i]); }
-	}
+
 	
 	public void setAuteur(Leraar auteur) {
 		this.auteur = auteur;

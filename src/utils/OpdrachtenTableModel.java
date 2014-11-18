@@ -7,7 +7,7 @@ import javax.swing.table.AbstractTableModel;
 
 import model.quiz.Opdracht;
 
-public class OpdrachtenTableModel extends AbstractTableModel
+public class OpdrachtenTableModel extends AbstractTableModel// implements Observer
 {
 	
 	/**
@@ -29,7 +29,7 @@ public class OpdrachtenTableModel extends AbstractTableModel
 	
 	private Map<Integer, Opdracht> data;
 	
-	private String[] columns = { "Id","Vraag" };
+	private String[] columns = { "Id","Type","Vraag", "Antwoord" };
 	//private Object[][] data;
 	
 	@Override
@@ -59,13 +59,40 @@ public class OpdrachtenTableModel extends AbstractTableModel
 			for (Entry<Integer,Opdracht> entry : data.entrySet()) 
 			{
 				if (idx == arg0)
-					if (arg1 == 0)
-						return entry.getKey();
-					else
-						return entry.getValue();
+				{
+					switch (arg1) {
+					case 0: return entry.getKey();
+					case 1: return entry.getValue().getType();
+					case 2: return entry.getValue().getVraag();
+					case 3: return entry.getValue().getJuisteAntwoord();
+					default:
+						return null;
+					}
+				}
 				idx++;
 			} 
 		return null;
 	}
+	
+//	private int getTableIndex(Opdracht obj)
+//	{
+//		int idx = 0;
+//		for (Entry<Integer, Opdracht> item : data.entrySet()) {
+//			if (item.equals(obj))
+//				return idx;
+//			idx++;
+//		}
+//		return -1;
+//	}
+
+//	@Override
+//	public void update(Observable obs, Object obj) {
+//
+//		if (data.containsValue(obs) )
+//		{ 
+//			int idx = getTableIndex((Opdracht)obs);
+//			fireTableCellUpdated(idx, super.findColumn("Vraag"));
+//		}
+//	}
 	
 }

@@ -3,7 +3,7 @@ package persistance;
 import java.util.Map;
 
 import model.quiz.*;
-import model.quiz.opdrachten.OpdrachtCatalogus;
+import model.quiz.catalogi.OpdrachtCatalogus;
 
 public class DbStoreAsSql implements IDbStrategy {
 
@@ -31,11 +31,4 @@ public class DbStoreAsSql implements IDbStrategy {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
-
-	
-
-
 }

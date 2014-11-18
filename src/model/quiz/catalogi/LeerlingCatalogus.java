@@ -1,8 +1,10 @@
-package model.quiz.leerling;
+package model.quiz.catalogi;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import model.quiz.Leerling;
 
 public class LeerlingCatalogus implements Iterable<Leerling> {
 

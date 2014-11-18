@@ -1,15 +1,12 @@
-package model.quiz;
+package model.quiz.catalogi;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import model.Properties;
-import model.quiz.opdrachten.OpdrachtCatalogus;
+import model.quiz.Quiz;
 import persistance.DbHandler;
-import persistance.IDbStrategy;
 
 public class QuizCatalogus implements Iterable<Entry<Integer, Quiz>> {
 
@@ -18,7 +15,7 @@ public class QuizCatalogus implements Iterable<Entry<Integer, Quiz>> {
 	@Override
 	public Iterator<Entry<Integer, Quiz>> iterator() { return quizen.entrySet().iterator(); }	
 	
-	public QuizCatalogus() { quizen = new HashMap<Integer, Quiz>(); }
+	QuizCatalogus() { quizen = new HashMap<Integer, Quiz>(); }
 	
 	public void add(Quiz q) throws Exception	
 	{
@@ -36,10 +33,9 @@ public class QuizCatalogus implements Iterable<Entry<Integer, Quiz>> {
 	
 	public int count() { return quizen.size(); }
 	
-	public void loadData(OpdrachtCatalogus opdrachtenCatalog)
-	{
-		IDbStrategy db = new DbHandler().getCatalogus(Properties.getInstance().getDbStore());
-		quizen = db.leesQuizen(opdrachtenCatalog);	
+	void loadData(OpdrachtCatalogus opdrachtenCatalog)
+	{		
+		quizen = DbHandler.getInstance().leesQuizen(opdrachtenCatalog);			
 		lastID = getLastIndexNumber();		
 	}
 		
@@ -47,10 +43,9 @@ public class QuizCatalogus implements Iterable<Entry<Integer, Quiz>> {
 	 * Slaat de data op in een databank.
 	 * @param opdrachtenCatalog De opdrachten catalogus om de koppeling tussen quizen en opdrachten op te slaan. 
 	 */
-	public void saveData(OpdrachtCatalogus opdrachtenCatalog)
-	{
-		IDbStrategy db = new DbHandler().getCatalogus(Properties.getInstance().getDbStore());
-		db.schrijfQuizen(quizen,opdrachtenCatalog);
+	void saveData(OpdrachtCatalogus opdrachtenCatalog)
+	{		
+		DbHandler.getInstance().schrijfQuizen(quizen,opdrachtenCatalog);
 	}
 
 	private int getLastIndexNumber()

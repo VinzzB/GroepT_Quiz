@@ -1,6 +1,6 @@
 package model.quiz.score;
 
-import model.Properties;
+import persistance.Properties;
 
 public class ScoreStrategy {
 

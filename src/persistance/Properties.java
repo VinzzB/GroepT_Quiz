@@ -1,7 +1,6 @@
-package model;
+package persistance;
 import java.io.IOException;
 
-import persistance.DbStoreType;
 import model.quiz.score.ScoreTypen;
 
 

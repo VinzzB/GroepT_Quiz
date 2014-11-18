@@ -3,7 +3,6 @@ package model.quiz;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.quiz.leerling.Leerling;
 import model.quiz.score.ScoreStrategy;
 import utils.date.normal.Datum;
 

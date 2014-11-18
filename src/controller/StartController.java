@@ -7,23 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import model.Catalogi;
+import model.quiz.Leerling;
 import model.quiz.Quiz;
-import model.quiz.leerling.Leerling;
+import model.quiz.catalogi.Catalogi;
 import view.Main;
 import view.StartPanel;
 
 public class StartController {
 
 	private Main mainForm;
-	private StartPanel panel = new StartPanel();
-	private Catalogi cat;
+	private StartPanel panel; // = new StartPanel();
+	
 		
 	
-	public StartController(Main mainForm, Catalogi cat) {
+	public StartController(Main mainForm, StartPanel startPanel) {
 		this.mainForm = mainForm;
-		this.cat = cat;	
+		this.panel = startPanel;
 		
 		//event listeners
 		panel.addButtonListener(new ButtonListener());
@@ -39,7 +38,8 @@ public class StartController {
 	{
 		//Converteer naar integer / Strings.
 		Map<Integer, String> entries = new HashMap<Integer, String>();
-		for (Entry<Integer, Quiz> quizEntry : cat.getQuizCatalogus()) {
+		
+		for (Entry<Integer, Quiz> quizEntry : Catalogi.getInstance().getQuizCatalogus()) {
 			entries.put(quizEntry.getKey(), quizEntry.getValue().toString());
 		}
 		panel.fillQuizComboBox(entries);
@@ -59,7 +59,7 @@ public class StartController {
 		public void actionPerformed(ActionEvent arg0) {
 			Entry<Integer,String> keuze = panel.getQuizKeuze();
 			
-			Quiz q = cat.getQuiz(keuze.getKey());	
+			Quiz q = Catalogi.getInstance().getQuiz(keuze.getKey());	
 			
 			//TODO: leerling
 			Leerling l = new Leerling("Vincent", 1);

@@ -1,26 +1,27 @@
 package model.quiz.opdrachten;
 
+import persistance.*;
 import model.quiz.*;
 
 public class OpdrachtFactory {
 
-	public static Opdracht getOpdracht(OpdrachtTypen opdrachtType, String[] dbData)
+	public static Opdracht getOpdracht(DbOpdrachtBase dbData)
 	{		
-		switch (opdrachtType) {
+		switch (dbData.getType()) {
 		case VRAAG: // "OpdrachtVraag":
 			return new OpdrachtVraag(dbData);		
 		case MEERKEUZE: // "OpdrachtMeerkeuze":
-			return new OpdrachtMeerkeuze(dbData);
+			return new OpdrachtMeerkeuze((DbOpdrachtMeerkeuze)dbData);
 		case OPSOMMING: // "OpdrachtOpsomming":
-			return new OpdrachtOpsomming(dbData);
+			return new OpdrachtOpsomming((DbOpdrachtOpsomming)dbData);
 		default:
 			return null;
 		}		
 	}
-	public static Opdracht getOpdracht(String opdrachtType, String[] dbData)
-	{
-		OpdrachtTypen type = OpdrachtTypen.valueOf(opdrachtType);
-		return getOpdracht(type, dbData);
-	}
+//	public static Opdracht getOpdracht(String opdrachtType, DbOpdrachtBase dbData)
+//	{
+//		OpdrachtTypen type = OpdrachtTypen.valueOf(opdrachtType);
+//		return getOpdracht(type, dbData);
+//	}
 	
 }

@@ -3,3 +3,7 @@
 3	 MEERKEUZE	 Wat is de hoofdstad van België?	 1	 1	 0	 Alg_Ken	 08/11/2014	 FoxP	 Brussel;Antwerpen;Leuven
 4	 OPSOMMING	 Som de hoofdsteden van onze aangrenzende buurlanden op.	 Parijs;Amsterdam;Berlijn	 1	 0	 Alg_Ken	 08/11/2014	 FoxP	 false
 5	 OPSOMMING	 Som onze aangrenzende buurlanden chronologisch op.	 Duitsland;Frankrijk;Luxemburg;Nederland	 1	 0	 Alg_Ken	 08/11/2014	 FoxP	 true
+8	 VRAAG	 Wat is de hoofdstad van Italië?	 Rome	 1	 0	 Alg_Ken	 01/11/2011	 FoxP
+10	 VRAAG	 1+1=?	 2	 1	 0	 Alg_Ken	 01/11/2011	 FoxP
+11	 VRAAG	 8+1=?	 9	 1	 0	 Alg_Ken	 01/11/2011	 FoxP
+12	 VRAAG	 5x6=?	 30	 1	 0	 Alg_Ken	 01/11/2011	 FoxP

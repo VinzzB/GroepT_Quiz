@@ -17,7 +17,7 @@ public class BeheerOpdrachtController {
 	public BeheerOpdrachtController(Main mainForm, Opdracht opdracht) {
 		this.mainForm = mainForm;
 		this.opdracht = opdracht;
-		panel = new BeheerOpdracht();
+		panel = new BeheerOpdracht();		
 		panel.addButtonListener(new ButtonListener());
 		panel.printOpdrachtData(opdracht.getType().toString(), opdracht.getVraag(), opdracht.getJuisteAntwoord());
 	}
@@ -31,6 +31,7 @@ public class BeheerOpdrachtController {
 		mainForm.removePanel(panel);
 		mainForm = null;
 		opdracht = null;
+		panel.removeAll();
 		panel = null;
 	}
 	
@@ -47,7 +48,9 @@ public class BeheerOpdrachtController {
 				if (button.equals(panel.getBtnOpslaan()))
 				{
 					//TODO change opdracht type?
-					//TODO Save data in opdracht object
+					//TODO Fout bij opslaan vraag Meerkeuze / opsomming  tgv override getVraag()... 
+					opdracht.setOpdracht(panel.getTxtVraag().getText(), panel.getTxtAntwoord().getText(), 0, 0, opdracht.getDatumRegistratie(), opdracht.getAuteur());
+					closePanel();
 				}
 				else if (button.equals(panel.getBtnSluiten()))
 				{

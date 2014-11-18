@@ -2,6 +2,7 @@ package model.quiz.opdrachten;
 
 import java.util.Arrays;
 
+import persistance.DbOpdrachtOpsomming;
 import model.quiz.Leraar;
 import model.quiz.Opdracht;
 
@@ -15,6 +16,10 @@ public class OpdrachtOpsomming extends Opdracht implements IValideerbaar {
 		this.inJuisteVolgorde = inJuisteVolgorde;
 	}
 	
+	public boolean getInJuisteVolgorde() {
+		return inJuisteVolgorde;
+	}
+
 	/**
 	 * Sets the data back from a database.
 	 * @param dbData
@@ -30,9 +35,9 @@ public class OpdrachtOpsomming extends Opdracht implements IValideerbaar {
 	 * 8: Auteur
 	 * *9*: in juiste volgorde
 	 */
-	public OpdrachtOpsomming(String[] dbData) {
+	public OpdrachtOpsomming(DbOpdrachtOpsomming dbData) {
 		super(dbData);
-		this.inJuisteVolgorde = Boolean.parseBoolean(dbData[9]);
+		this.inJuisteVolgorde = dbData.getInJuisteVolgorde();
 	}
 	
 	@Override
@@ -73,13 +78,6 @@ public class OpdrachtOpsomming extends Opdracht implements IValideerbaar {
 				return false;
 		}		
 		return true;		
-	}
-	
-	public String[] getDataForDb() {
-		String[] values = new String[10];
-		super.fillDataArray(values);
-		values[9] = Boolean.toString(inJuisteVolgorde);
-		return values;
 	}
 
 	@Override

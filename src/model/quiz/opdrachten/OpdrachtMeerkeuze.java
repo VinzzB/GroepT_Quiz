@@ -1,6 +1,6 @@
 package model.quiz.opdrachten;
 
-import utils.Arrays;
+import persistance.DbOpdrachtMeerkeuze;
 import model.quiz.Leraar;
 import model.quiz.Opdracht;
 
@@ -46,6 +46,10 @@ public class OpdrachtMeerkeuze extends Opdracht implements IValideerbaar {
 		{ return false;}
 	}
 
+	public String[] getKeuzen() {
+		return keuzen;
+	}
+
 	@Override
 	public String getValideerTekst() {
 		return "Geef een nummer tussen 1 t/m " + keuzen.length;
@@ -58,39 +62,20 @@ public class OpdrachtMeerkeuze extends Opdracht implements IValideerbaar {
 	/**
 	 * Sets the data back from a database.
 	 * @param dbData
-	 * String array fields:
-	 * 0: Id
-	 * 1: ClassType
-	 * 2: Vraag
-	 * 3: Antwoord
-	 * 4: MaxAantalPogingen
-	 * 5: MaxAntwoordTijd
-	 * 6: Categorie
-	 * 7: DatumReg.
-	 * 8: Auteur
-	 * *9*: keuzen
 	 */
-	public OpdrachtMeerkeuze(String[] dbData) {
+	public OpdrachtMeerkeuze(DbOpdrachtMeerkeuze dbData) {
 		super(dbData);
-		this.keuzen = dbData[9].split(";");
+		this.keuzen = dbData.getKeuzen();
 	}
 	
-	public String[] getDataForDb() {
-		String[] values = new String[10];
-		super.fillDataArray(values);
-		values[9] = Arrays.Join(";", keuzen);
-		return values;
-	}
-	
-	@Override
-	public String getVraag() {
-		// TODO Auto-generated method stub
-		return super.getVraag() + "\r\n" + Arrays.FormatJoin("%d - %s\r\n", keuzen);
-	}
+//	@Override
+//	public String getVraag() {
+//		// TODO Auto-generated method stub
+//		return super.getVraag() + "\r\n" + Arrays.FormatJoin("%d - %s\r\n", keuzen);
+//	}
 
 	@Override
 	public OpdrachtTypen getType() {
-		// TODO Auto-generated method stub
 		return OpdrachtTypen.MEERKEUZE;
 	}
 }

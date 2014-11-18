@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import model.quiz.*;
-import model.quiz.leerling.Leerling;
 import model.quiz.score.ScoreStrategy;
 import view.Main;
 import view.speelQuiz;

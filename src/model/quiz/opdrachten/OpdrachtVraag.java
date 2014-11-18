@@ -1,5 +1,6 @@
 package model.quiz.opdrachten;
 
+import persistance.DbOpdrachtBase;
 import model.quiz.Leraar;
 import model.quiz.Opdracht;
 
@@ -21,18 +22,8 @@ public class OpdrachtVraag extends Opdracht {
 	/**
 	 * Sets the data back from a database.
 	 * @param dbData
-	 * String array fields:
-	 * 0: Id
-	 * 1: ClassType
-	 * 2: Vraag
-	 * 3: Antwoord
-	 * 4: MaxAantalPogingen
-	 * 5: MaxAntwoordTijd
-	 * 6: Categorie
-	 * 7: DatumReg.
-	 * 8: Auteur
 	 */
-	public OpdrachtVraag(String[] dbData) {
+	public OpdrachtVraag(DbOpdrachtBase dbData) {
 		super(dbData);
 		
 	}
@@ -47,11 +38,11 @@ public class OpdrachtVraag extends Opdracht {
 		
 	}
 
-	public String[] getDataForDb() {
-		String[] values = new String[9];
-		super.fillDataArray(values);
-		return values;
-	}
+//	public String[] getDataForDb() {
+//		String[] values = new String[9];
+//		super.fillDataArray(values);
+//		return values;
+//	}
 
 	@Override
 	public OpdrachtTypen getType() {

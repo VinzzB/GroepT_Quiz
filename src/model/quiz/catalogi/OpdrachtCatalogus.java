@@ -1,11 +1,10 @@
-package model.quiz.opdrachten;
+package model.quiz.catalogi;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import model.Properties;
 import model.quiz.Opdracht;
 import persistance.*;
 
@@ -15,7 +14,7 @@ public class OpdrachtCatalogus implements Iterable<Entry<Integer,Opdracht>> {
 	/**
 	 * Initializes the Opdracht catalog.
 	 */
-	public OpdrachtCatalogus() {
+	OpdrachtCatalogus() {
 		opdrachten = new HashMap<Integer,Opdracht>();					
 	}
 	
@@ -39,20 +38,18 @@ public class OpdrachtCatalogus implements Iterable<Entry<Integer,Opdracht>> {
 	/**
 	 * Laad de opdrachten data uit een databank
 	 */
-	public void LoadData()
+	void LoadData()
 	{
-		IDbStrategy db = new DbHandler().getCatalogus(Properties.getInstance().getDbStore());
-		opdrachten = db.leesOpdrachten();
+		opdrachten = DbHandler.getInstance().leesOpdrachten();
 		lastID = getLastIndexNumber();
 	}
 	
 	/**
 	 * Slaat de opdrachten op in een databank.
 	 */
-	public void saveData()
+	void saveData()
 	{
-		IDbStrategy db = new DbHandler().getCatalogus(Properties.getInstance().getDbStore());
-		db.schrijfOpdrachten(opdrachten);
+		DbHandler.getInstance().schrijfOpdrachten(opdrachten);
 	}
 	
 	/**

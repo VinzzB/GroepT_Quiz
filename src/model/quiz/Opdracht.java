@@ -3,11 +3,12 @@ package model.quiz;
 import java.util.ArrayList;
 import java.util.List;
 
+import persistance.DbOpdrachtBase;
 import model.quiz.opdrachten.OpdrachtCategorie;
 import model.quiz.opdrachten.OpdrachtTypen;
 import utils.date.normal.Datum;
 
-public abstract class Opdracht implements Comparable<Opdracht> {
+public abstract class Opdracht  implements Comparable<Opdracht> {
 	
 	//Metadata members
 	/** The UniqueID for this opdracht object. (being set in the CTOR's) */
@@ -20,21 +21,21 @@ public abstract class Opdracht implements Comparable<Opdracht> {
 	private Datum datumRegistratie = new Datum();
 	private Leraar auteur;
 
-	
-	public void fillDataArray( String[] dataArray) {
-		dataArray[1] = getClass().getSimpleName();
-		dataArray[2] = this.vraag;
-		dataArray[3] = this.juisteAntwoord;
-		dataArray[4] = Integer.toString(this.maxAantalPogingen);
-		dataArray[5] = Integer.toString(this.maxAntwoordTijd);
-		dataArray[6] = this.categorie.name();
-		dataArray[7] = this.datumRegistratie.getEuropeanFormat();
-		dataArray[8] = this.auteur.name();
+	public void setOpdracht(String vraag, String antwoord, int maxAantalPogingen, int maxAntwoordTijd, Datum datumReg, Leraar auteur)
+	{
+		this.vraag = vraag;
+		this.juisteAntwoord = antwoord;
+		this.maxAantalPogingen = maxAantalPogingen;
+		this.maxAntwoordTijd = maxAntwoordTijd;
+		this.datumRegistratie = datumReg;
+		this.auteur = auteur;							
+	//	setChanged(); //Observable
+	//	notifyObservers(); //notify attached observers
 	}
 
 	//Must inherit Methods
 	public abstract boolean isJuisteAntwoord(String antwoord);	
-	public abstract String[] getDataForDb();
+	//public abstract String[] getDataForDb();
 	public abstract OpdrachtTypen getType();
 	
 	//Properties
@@ -61,36 +62,19 @@ public abstract class Opdracht implements Comparable<Opdracht> {
 	/**
 	 * Sets the data back from a database.
 	 * @param dbData
-	 * String array fields:
-	 * 0: Id
-	 * 1: ClassType
-	 * 2: Vraag
-	 * 3: Antwoord
-	 * 4: MaxAantalPogingen
-	 * 5: MaxAntwoordTijd
-	 * 6: Categorie
-	 * 7: DatumReg.
-	 * 8: Auteur
 	 */
-	public Opdracht(String[] dbData) {
+	public Opdracht(DbOpdrachtBase dbData) {
 		this();
 		//Set data for this object			
-		this.vraag = dbData[2];
-		this.juisteAntwoord = dbData[3];
-		this.maxAantalPogingen = Integer.parseInt(dbData[4]);
-		this.maxAntwoordTijd = Integer.parseInt(dbData[5]);
-		this.categorie = OpdrachtCategorie.valueOf(dbData[6]);		
-		this.datumRegistratie = new Datum(dbData[7]);
-		this.auteur = Leraar.valueOf(dbData[8]);
+		this.vraag = dbData.getVraag();
+		this.juisteAntwoord = dbData.getJuisteAntwoord();
+		this.maxAantalPogingen = dbData.getMaxAantalPogingen();
+		this.maxAntwoordTijd = dbData.getMaxAntwoordTijd();
+		this.categorie = dbData.getCategorie();		
+		this.datumRegistratie = dbData.getDatumRegistratie();
+		this.auteur = dbData.getAuteur();
 	}
-	
-//	protected void startOpdracht()
-//	{
-//		if (maxAntwoordTijd > 0)
-//		{ /* Activate timer */ }
-//	}
-	
-			
+				
 	//Methods for bi-directional communication
 	protected void voegQuizOpdrachtToe(QuizOpdracht quizOpdracht){
 		quizOpdrachten.add(quizOpdracht);		

@@ -4,16 +4,15 @@ import java.util.Random;
 
 import javax.naming.OperationNotSupportedException;
 
-import model.Catalogi;
 import model.quiz.*;
-import model.quiz.leerling.Leerling;
+import model.quiz.catalogi.Catalogi;
 public class QuizTestController {
 	
 	public static void main(String[] args) {		
 		try
 		{
-			Catalogi catalogi = new Catalogi();
-			catalogi.loadData();
+			//Catalogi catalogi = new Catalogi();
+			//catalogi.loadData();
 //		//laad opdrachten van db
 //		OpdrachtCatalogus opdrachten = new OpdrachtCatalogus();
 //		opdrachten.LoadData(); //load from db			
@@ -31,7 +30,7 @@ public class QuizTestController {
 //		quiz.setDatumRegistratie(new Datum(2,11,2014));
 		//Add to catalog
 //		quizen.add(quiz);
-		Quiz quiz = catalogi.getQuiz(1);
+		Quiz quiz = Catalogi.getInstance().getQuiz(1);
 		
 		//QuizOpdracht qo = quiz.getQuizOpdrachten().get(2);
 		//qo.ontKoppelOpdrachtVanQuiz();
@@ -75,14 +74,14 @@ public class QuizTestController {
 		//RESULTATEN QUIZ 1
 		PrintResultatenQuiz(quiz);
 		//OPEN ANDERE QUIZ
-		quiz = catalogi.getQuiz(2);
+		quiz = Catalogi.getInstance().getQuiz(2);
 	//	quiz.setOpengesteld();
 		//SPEEL met leerling1
 		SpeelQuiz(leerling1,quiz);
 		PrintResultatenQuiz(quiz);
 		
 		//Close app = Save data...
-		catalogi.saveData();
+		Catalogi.getInstance().saveData();
 //		opdrachten.saveData();
 //		quizen.saveData(opdrachten);
 		
